@@ -27,10 +27,10 @@ jobs:
       - run: npm run build
       - run: git add dist/
       - run: git commit -am "make it better"
-      - run: git push -f https://heroku:$API_KEY@git.heroku.com/$circle-ci-demo
-.git master
+      - run: git push -f https://heroku:$API_KEY@git.heroku.com/$circle-ci-demo\.git master
 
       - save_cache:
           paths:
             - node_modules
           key: v1-dependencies-{{ checksum "package.json" }}
+`
