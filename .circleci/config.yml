@@ -1,0 +1,36 @@
+version: 2
+deployment:
+  staging:
+    branch: master
+    heroku:
+      appname: joom-8
+jobs:
+  build:
+    docker:
+      - image: circleci/node:7.10
+
+    working_directory: ~/repo
+
+    steps:
+      - checkout
+
+      # Download and cache dependencies
+      - restore_cache:
+          keys:
+          - v1-dependencies-{{ checksum "package.json" }}
+          # fallback to using the latest cache if no exact match is found
+          - v1-dependencies-
+
+      - run: npm install
+      - run: git config --global user.email "shashank@newput.com"
+      - run: git config --global user.name "Shashank"
+      - run: npm run build
+      - run: git add dist/
+      - run: git commit -am "make it better"
+      - run: git push -f https://heroku:$API_KEY@git.heroku.com/$circle-ci-demo
+.git master
+
+      - save_cache:
+          paths:
+            - node_modules
+          key: v1-dependencies-{{ checksum "package.json" }}
